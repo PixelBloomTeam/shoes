@@ -344,72 +344,18 @@ function initBeforeAfter() {
    TEAM SLIDER
 ═══════════════════════════════════ */
 function initTeamSlider() {
-  const slider = document.getElementById('teamSlider');
-  const dotsW  = document.getElementById('teamDots');
-  const btnPrev = document.getElementById('teamPrev');
-  const btnNext = document.getElementById('teamNext');
-  if (!slider) return;
-
-  const cards = Array.from(slider.querySelectorAll('.team-c'));
-  const total = cards.length;
-  let cur = 0;
-
-  function getVisible() {
-    const first = cards[0];
-    if (!first) return 1;
-    const gap = parseFloat(getComputedStyle(slider).gap) || 16;
-    const cardW = first.getBoundingClientRect().width || 1;
-    const viewport = slider.parentElement ? slider.parentElement.getBoundingClientRect().width : slider.getBoundingClientRect().width;
-    return Math.max(1, Math.floor((viewport + gap) / (cardW + gap)));
-  }
-
-  function getPages() {
-    return Math.ceil(total / getVisible());
-  }
-
-  function buildDots() {
-    if (!dotsW) return;
-    dotsW.innerHTML = '';
-    for (let i = 0; i < getPages(); i++) {
-      const d = document.createElement('div');
-      d.className = 'team-dot';
-      d.addEventListener('click', () => go(i * getVisible()));
-      dotsW.appendChild(d);
+  initInfiniteSlider({
+    sliderId: 'teamSlider',
+    dotsId: 'teamDots',
+    prevId: 'teamPrev',
+    nextId: 'teamNext',
+    cardSelector: '.team-c',
+    dotClass: 'team-dot',
+    getVisible: () => {
+      if (window.innerWidth <= 768) return 1;
+      if (window.innerWidth <= 1024) return 2;
+      return 3;
     }
-    updateDots();
-  }
-
-  function updateDots() {
-    if (!dotsW) return;
-    const dots = dotsW.querySelectorAll('.team-dot');
-    dots.forEach((d, i) => {
-      d.classList.toggle('ac', i === Math.floor(cur / getVisible()));
-    });
-  }
-
-  function go(idx) {
-    const vis = getVisible();
-    const max = Math.max(0, total - vis);
-    cur = Math.max(0, Math.min(idx, max));
-    const gap = parseFloat(getComputedStyle(slider).gap) || 16;
-    const cardW = cards[0] ? cards[0].getBoundingClientRect().width : 0;
-    slider.style.transform = `translateX(-${cur * (cardW + gap)}px)`;
-    updateDots();
-  }
-
-  if (btnPrev) btnPrev.addEventListener('click', () => go(cur - getVisible()));
-  if (btnNext) btnNext.addEventListener('click', () => go(cur + getVisible()));
-
-  buildDots();
-
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      cur = 0;
-      buildDots();
-      go(0);
-    }, 150);
   });
 }
 
@@ -417,86 +363,161 @@ function initTeamSlider() {
    REVIEWS SLIDER
 ═══════════════════════════════════ */
 function initRvSlider() {
-  const slider  = document.getElementById('rvSlider');
-  const dotsW   = document.getElementById('rvDots');
-  const btnPrev = document.getElementById('rvPrev');
-  const btnNext = document.getElementById('rvNext');
+  initInfiniteSlider({
+    sliderId: 'rvSlider',
+    dotsId: 'rvDots',
+    prevId: 'rvPrev',
+    nextId: 'rvNext',
+    cardSelector: '.rv-c',
+    dotClass: 'rv-dot',
+    autoMs: 5000,
+    getVisible: () => {
+      if (window.innerWidth <= 768) return 1;
+      if (window.innerWidth <= 1024) return 2;
+      return 4;
+    }
+  });
+}
+
+function initInfiniteSlider(opts) {
+  const slider = document.getElementById(opts.sliderId);
+  const dotsW = document.getElementById(opts.dotsId);
+  const btnPrev = document.getElementById(opts.prevId);
+  const btnNext = document.getElementById(opts.nextId);
   if (!slider) return;
 
-  const cards = Array.from(slider.querySelectorAll('.rv-c'));
-  const total = cards.length;
   let cur = 0;
-  let autoTimer;
+  let visible = 1;
+  let cloneCount = 1;
+  let originals = [];
+  let pages = 1;
+  let autoTimer = null;
+  let isJumping = false;
 
-  function getVisible() {
-    const first = cards[0];
-    if (!first) return 1;
-    const gap = parseFloat(getComputedStyle(slider).gap) || 16;
-    const cardW = first.getBoundingClientRect().width || 1;
-    const viewport = slider.parentElement ? slider.parentElement.getBoundingClientRect().width : slider.getBoundingClientRect().width;
-    return Math.max(1, Math.floor((viewport + gap) / (cardW + gap)));
+  function clearClones() {
+    slider.querySelectorAll('[data-clone="1"]').forEach(el => el.remove());
   }
 
-  function getPages() {
-    return Math.ceil(total / getVisible());
+  function stepSize() {
+    const first = slider.querySelector(opts.cardSelector);
+    if (!first) return 0;
+    const gap = parseFloat(getComputedStyle(slider).gap) || 0;
+    return first.getBoundingClientRect().width + gap;
+  }
+
+  function getRealIndex() {
+    const total = originals.length || 1;
+    const idx = (cur - cloneCount) % total;
+    return (idx + total) % total;
+  }
+
+  function updateDots() {
+    if (!dotsW) return;
+    const active = Math.floor(getRealIndex() / visible);
+    dotsW.querySelectorAll(`.${opts.dotClass}`).forEach((dot, i) => {
+      dot.classList.toggle('ac', i === active);
+    });
+  }
+
+  function setTransform(index, animate = true) {
+    cur = index;
+    slider.style.transition = animate ? 'transform .42s cubic-bezier(.4,0,.2,1)' : 'none';
+    slider.style.transform = `translateX(-${cur * stepSize()}px)`;
+    updateDots();
+  }
+
+  function normalizeIfNeeded() {
+    if (isJumping || !originals.length) return;
+    const total = originals.length;
+    let target = cur;
+
+    if (cur >= cloneCount + total) target = cur - total;
+    if (cur < cloneCount) target = cur + total;
+    if (target === cur) return;
+
+    isJumping = true;
+    setTransform(target, false);
+    requestAnimationFrame(() => {
+      isJumping = false;
+      slider.style.transition = 'transform .42s cubic-bezier(.4,0,.2,1)';
+      updateDots();
+    });
   }
 
   function buildDots() {
     if (!dotsW) return;
     dotsW.innerHTML = '';
-    for (let i = 0; i < getPages(); i++) {
+    for (let i = 0; i < pages; i++) {
       const d = document.createElement('div');
-      d.className = 'rv-dot';
-      d.addEventListener('click', () => { go(i * getVisible()); resetAuto(); });
+      d.className = opts.dotClass;
+      d.addEventListener('click', () => {
+        setTransform(cloneCount + (i * visible), true);
+        resetAuto();
+      });
       dotsW.appendChild(d);
     }
-    updateDots();
   }
 
-  function updateDots() {
-    if (!dotsW) return;
-    const dots = dotsW.querySelectorAll('.rv-dot');
-    dots.forEach((d, i) => {
-      d.classList.toggle('ac', i === Math.floor(cur / getVisible()));
-    });
-  }
-
-  function go(idx) {
-    const vis = getVisible();
-    const max = Math.max(0, total - vis);
-    cur = Math.max(0, Math.min(idx, max));
-    const gap   = parseFloat(getComputedStyle(slider).gap) || 16;
-    const cardW = cards[0] ? cards[0].getBoundingClientRect().width : 0;
-    slider.style.transform = `translateX(-${cur * (cardW + gap)}px)`;
-    updateDots();
-  }
-
-  function autoNext() {
-    const vis  = getVisible();
-    const next = cur + vis;
-    go(next >= total ? 0 : next);
+  function move(dir) {
+    setTransform(cur + (dir * visible), true);
+    resetAuto();
   }
 
   function resetAuto() {
+    if (!opts.autoMs) return;
     clearInterval(autoTimer);
-    autoTimer = setInterval(autoNext, 5000);
+    autoTimer = setInterval(() => move(1), opts.autoMs);
   }
 
-  if (btnPrev) btnPrev.addEventListener('click', () => { go(cur - getVisible()); resetAuto(); });
-  if (btnNext) btnNext.addEventListener('click', () => { go(cur + getVisible()); resetAuto(); });
+  function rebuild() {
+    clearInterval(autoTimer);
+    clearClones();
+    slider.style.transition = 'none';
+    slider.style.transform = 'translateX(0)';
 
-  buildDots();
-  resetAuto();
+    originals = Array.from(slider.querySelectorAll(opts.cardSelector)).filter(
+      card => !card.hasAttribute('data-clone')
+    );
+    if (!originals.length) return;
+
+    visible = Math.max(1, Math.min(opts.getVisible(), originals.length));
+    cloneCount = visible;
+    pages = Math.max(1, Math.ceil(originals.length / visible));
+
+    const head = originals.slice(0, cloneCount).map(card => {
+      const c = card.cloneNode(true);
+      c.setAttribute('data-clone', '1');
+      return c;
+    });
+    const tail = originals.slice(-cloneCount).map(card => {
+      const c = card.cloneNode(true);
+      c.setAttribute('data-clone', '1');
+      return c;
+    });
+
+    tail.forEach(c => slider.insertBefore(c, slider.firstChild));
+    head.forEach(c => slider.appendChild(c));
+
+    cur = cloneCount;
+    buildDots();
+    setTransform(cur, false);
+    requestAnimationFrame(() => {
+      slider.style.transition = 'transform .42s cubic-bezier(.4,0,.2,1)';
+    });
+    resetAuto();
+  }
+
+  slider.addEventListener('transitionend', normalizeIfNeeded);
+  if (btnPrev) btnPrev.onclick = () => move(-1);
+  if (btnNext) btnNext.onclick = () => move(1);
 
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      cur = 0;
-      buildDots();
-      go(0);
-    }, 150);
+    resizeTimer = setTimeout(rebuild, 150);
   });
+
+  rebuild();
 }
 
 /* ═══════════════════════════════════
