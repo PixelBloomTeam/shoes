@@ -46,16 +46,21 @@
 <!-- HEADER -->
 <header id="hdr">
   <div class="wrap hdr-inner">
-    <button class="burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="sideM">
-      <div class="bl"></div><div class="bl"></div><div class="bl"></div>
-    </button>
-    <a href="#top" class="logo">
-      <div class="logo-mark">♨</div>
-      <span>PAR</span> CLEAN
-    </a>
+    <div class="hdr-left">
+      <button class="burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="sideM">
+        <div class="bl"></div><div class="bl"></div><div class="bl"></div>
+      </button>
+      <a href="#top" class="logo">
+        <div class="logo-mark">♨</div>
+        <span>PAR</span> CLEAN
+      </a>
+      <a href="#contacts" class="hdr-address">Москва, ул. Садовая, 12</a>
+    </div>
     <div class="hdr-right">
       <a href="tel:+79991234567" class="hdr-phone">+7 (999) 123-45-67</a>
-      <a href="https://max.ru/YOURNAME" target="_blank" class="msg-btn">MAX</a>
+      <a href="https://max.ru/YOURNAME" target="_blank" class="msg-btn max-brand" aria-label="Max">
+        <img src="https://max.ru/favicon.ico" alt="Max"/>
+      </a>
       <button class="btn btn-gold js-open-modal" style="font-size:13px;padding:11px 22px;">
         📷 Оценить по фото
       </button>

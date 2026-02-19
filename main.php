@@ -4,9 +4,11 @@
   <div class="hero-bg-grad"></div>
   <div class="hero-ring"></div>
 
-  <img class="hero-shoe"
-    src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=800"
-    alt="PAR CLEAN — чистая обувь" loading="eager"/>
+  <div class="hero-shoe-wrap">
+    <img class="hero-shoe"
+      src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=800"
+      alt="PAR CLEAN — чистая обувь" loading="eager"/>
+  </div>
 
   <div class="f-label fl1">⭐ 20+ лет опыта команды</div>
   <div class="f-label fl2">🛡 Гарантия 7 дней</div>
@@ -14,7 +16,7 @@
   <div class="wrap">
     <div class="hero-inner">
       <div class="hero-badge-wrap">
-        <div class="hero-badge"><div class="tag-dot"></div>Паровая химчистка · Москва</div>
+        <div class="hero-badge"><div class="tag-dot"></div>Итальянское оборудование · Москва</div>
       </div>
       <h1>
         Паровая<br/>
@@ -26,8 +28,8 @@
         Курьер по всей Москве · Гипоаллергенные средства.
       </p>
       <div class="hero-badges-row">
-        <div class="hf hf-gold"><span>📷</span>Оценка по фото за 5 мин</div>
-        <div class="hf"><span>🚗</span>Курьер от 50 минут</div>
+        <div class="hf hf-gold"><span>⭐</span>20+ лет опыта команды</div>
+        <div class="hf"><span>🚗</span>Собственный курьер</div>
         <div class="hf"><span>🛡</span>Гарантия 7 дней</div>
         <div class="hf"><span>♨</span>Итальянское оборудование</div>
       </div>
