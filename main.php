@@ -478,9 +478,6 @@
     <h2>Оценка по фото —<br/><span class="gold-text">быстро и без визита</span></h2>
     <div class="ct-wrap">
       <div class="ct-left">
-        <div class="ct-msg-btns">
-          <a href="https://max.ru/YOURNAME" target="_blank" class="btn btn-gold">💬 Max</a>
-        </div>
         <p class="ct-hint">Пришлите 2–3 фото и напишите: материал + что не устраивает + нужен ли озон/срочно</p>
         <form class="ct-form" id="ctForm">
           <div class="field">
