@@ -143,13 +143,13 @@ body.mo .side{left:0;}
 .hero-ring::after{content:"";position:absolute;inset:40px;border-radius:50%;border:1px dashed rgba(181,123,255,.08);animation:ring-rot-r 28s linear infinite;}
 @keyframes ring-rot{0%{transform:translate(-50%,-52%) rotate(0deg)}100%{transform:translate(-50%,-52%) rotate(360deg)}}
 @keyframes ring-rot-r{0%{transform:rotate(0deg)}100%{transform:rotate(-360deg)}}
-.hero-shoe-wrap{position:absolute;z-index:2;top:50%;right:6%;transform:translateY(-52%);width:min(560px,46vw);height:min(440px,40vw);border-radius:24px;overflow:hidden;pointer-events:none;background:#eceff5;border:1px solid rgba(255,255,255,.35);}
+.hero-shoe-wrap{position:absolute;z-index:2;top:53%;right:6%;transform:translateY(-52%);width:min(560px,46vw);height:min(420px,36vw);border-radius:24px;overflow:hidden;pointer-events:none;background:#eceff5;border:1px solid rgba(255,255,255,.35);}
 .hero-shoe-wrap::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:24px 24px;mix-blend-mode:soft-light;opacity:.35;}
-.hero-shoe{position:absolute;inset:0;width:100%;height:100%;padding:16px 22px;border-radius:24px;object-fit:contain;filter:drop-shadow(0 28px 50px rgba(0,0,0,.35));animation:float 5s ease-in-out infinite;}
+.hero-shoe{position:absolute;inset:0;width:100%;height:100%;padding:0;border-radius:24px;object-fit:cover;object-position:center 32%;filter:drop-shadow(0 28px 50px rgba(0,0,0,.35));animation:float 5s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(-52%)}50%{transform:translateY(-56%)}}
 .f-label{position:absolute;z-index:3;background:rgba(10,11,18,.84);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,110,180,.22);border-radius:14px;padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--candy-pink);box-shadow:0 8px 32px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1);animation:float-l 4s ease-in-out infinite;}
-.fl1{top:20%;right:44%;animation-delay:-.8s;}
-.fl2{top:32%;right:9%;animation-delay:-1.8s;}
+.fl1{top:29%;right:42%;animation-delay:-.8s;}
+.fl2{top:44%;right:10%;animation-delay:-1.8s;}
 @keyframes float-l{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .hero-inner{position:relative;z-index:4;padding:110px 0 56px;min-height:min(860px,calc(100vh - 84px));display:flex;flex-direction:column;justify-content:center;}
 .hero-badge-wrap{margin-bottom:22px;}
@@ -631,10 +631,10 @@ body.modal-open .modal{opacity:1;pointer-events:all;transform:scale(1) translate
   transition: transform .4s cubic-bezier(.4,0,.2,1);
 }
 .rv-c {
-  min-width: calc((100% - (2 * var(--gap))) / 3);
+  min-width: calc((100% - (3 * var(--gap))) / 4);
   flex-shrink: 0;
   padding: 22px;
-  min-height: 320px;
+  min-height: 380px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -729,7 +729,7 @@ body.modal-open .modal{opacity:1;pointer-events:all;transform:scale(1) translate
   .ba-fw { padding: 28px 32px 0; }
   .ba-thumbs { grid-template-columns: repeat(5, minmax(0,1fr)); }
   .team-c    { min-width: calc((100% - var(--gap)) / 2); }
-  .rv-c      { min-width: calc((100% - var(--gap)) / 2); min-height: 300px; }
+  .rv-c      { min-width: calc((100% - (2 * var(--gap))) / 3); min-height: 340px; }
   .ft-grid   { grid-template-columns: 1fr 1fr; }
   .ct-info-grid { grid-template-columns: 1fr; }
 }
@@ -739,15 +739,17 @@ body.modal-open .modal{opacity:1;pointer-events:all;transform:scale(1) translate
   .ba-thumbs { grid-template-columns: repeat(5, minmax(0,1fr)); }
   .ba-info-row { padding: 0; }
   .team-c    { min-width: 100%; }
-  .rv-c      { min-width: 100%; min-height: 280px; }
+  .rv-c      { min-width: calc((100% - var(--gap)) / 2); min-height: 320px; }
   .ft-grid   { grid-template-columns: 1fr 1fr; }
   .services-grid { grid-template-columns: 1fr 1fr; }
 }
 @media(max-width:480px){
+  .fl1,.fl2{display:none;}
   .ba-thumbs { grid-template-columns: repeat(3, minmax(0,1fr)); }
   .ft-grid   { grid-template-columns: 1fr; }
   .ct-info-grid { grid-template-columns: 1fr; }
   .services-grid { grid-template-columns: 1fr; }
+  .rv-c      { min-width: 100%; min-height: 280px; }
 }
 
 /* ── Mobile fixes ── */

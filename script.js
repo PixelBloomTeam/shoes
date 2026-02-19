@@ -355,9 +355,12 @@ function initTeamSlider() {
   let cur = 0;
 
   function getVisible() {
-    if (window.innerWidth < 768)  return 1;
-    if (window.innerWidth < 1024) return 2;
-    return 3;
+    const first = cards[0];
+    if (!first) return 1;
+    const gap = parseFloat(getComputedStyle(slider).gap) || 16;
+    const cardW = first.getBoundingClientRect().width || 1;
+    const viewport = slider.parentElement ? slider.parentElement.getBoundingClientRect().width : slider.getBoundingClientRect().width;
+    return Math.max(1, Math.floor((viewport + gap) / (cardW + gap)));
   }
 
   function getPages() {
@@ -389,7 +392,7 @@ function initTeamSlider() {
     const max = Math.max(0, total - vis);
     cur = Math.max(0, Math.min(idx, max));
     const gap = parseFloat(getComputedStyle(slider).gap) || 16;
-    const cardW = cards[0] ? cards[0].offsetWidth : 0;
+    const cardW = cards[0] ? cards[0].getBoundingClientRect().width : 0;
     slider.style.transform = `translateX(-${cur * (cardW + gap)}px)`;
     updateDots();
   }
@@ -426,9 +429,12 @@ function initRvSlider() {
   let autoTimer;
 
   function getVisible() {
-    if (window.innerWidth < 768)  return 1;
-    if (window.innerWidth < 1024) return 2;
-    return 3;
+    const first = cards[0];
+    if (!first) return 1;
+    const gap = parseFloat(getComputedStyle(slider).gap) || 16;
+    const cardW = first.getBoundingClientRect().width || 1;
+    const viewport = slider.parentElement ? slider.parentElement.getBoundingClientRect().width : slider.getBoundingClientRect().width;
+    return Math.max(1, Math.floor((viewport + gap) / (cardW + gap)));
   }
 
   function getPages() {
@@ -460,7 +466,7 @@ function initRvSlider() {
     const max = Math.max(0, total - vis);
     cur = Math.max(0, Math.min(idx, max));
     const gap   = parseFloat(getComputedStyle(slider).gap) || 16;
-    const cardW = cards[0] ? cards[0].offsetWidth : 0;
+    const cardW = cards[0] ? cards[0].getBoundingClientRect().width : 0;
     slider.style.transform = `translateX(-${cur * (cardW + gap)}px)`;
     updateDots();
   }
