@@ -744,3 +744,39 @@ body.modal-open .modal{opacity:1;pointer-events:all;transform:scale(1) translate
   .ct-info-grid { grid-template-columns: 1fr; }
   .services-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Mobile fixes ── */
+@media(max-width:768px){
+  .hdr-inner{padding:10px 0;}
+  .logo{font-size:18px;gap:9px;}
+  .logo-mark{width:34px;height:34px;font-size:16px;border-radius:10px;}
+  .hdr-right{gap:8px;}
+  .hdr-right > .btn{display:none;}
+  .msg-btn{width:34px;height:34px;}
+
+  .hero-inner{
+    min-height:auto;
+    padding:92px 0 24px;
+    justify-content:flex-start;
+  }
+  .hero-badge{font-size:10px;padding:5px 12px;}
+  .hero-sub br{display:none;}
+  .hero-badges-row{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:4px;
+  }
+  .hf{white-space:nowrap;flex:0 0 auto;}
+}
+
+@media(max-width:480px){
+  .hdr-left{gap:10px;}
+  .hdr-right{margin-left:auto;}
+
+  .hero-inner{padding:84px 0 20px;}
+  .btn-row{gap:10px;}
+  .btn-row .btn{width:100%;}
+
+  .ba-fw{padding:22px 12px 0;}
+}
